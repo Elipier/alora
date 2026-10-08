@@ -1,9 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function CardOutline() {
+type CardOutlineProps = {
+  phrase: string;
+};
+
+export default function CardOutline({ phrase }: CardOutlineProps) {
   return (
     <View style={styles.card}>
-      <Text style={styles.text}>Place sentence here</Text>
+      <Text style={styles.text}>{phrase}</Text>
     </View>
   );
 }
@@ -16,8 +20,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 16,
     height: "50%",
+    width: "90%",
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
   },
   text: {
     color: "#000",
