@@ -1,18 +1,10 @@
 import { StyleSheet, View } from "react-native";
-import Button from "../components/button";
-import ImageViewer from "../components/image-viewer";
-const PlaceholderImage = require("@/assets/images/background-image.png");
+import CardOutline from "../components/card";
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <ImageViewer imageSource={PlaceholderImage} />
-      </View>
-      <View style={styles.footerContainer}>
-        <Button theme="primary" label="Choose a photo" />
-        <Button label="Use this photo" />
-      </View>
+      <CardOutline></CardOutline>
     </View>
   );
 }
@@ -23,16 +15,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#25292e",
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  imageContainer: {
-    flex: 1,
-  },
-
-  image: {
-    width: 320,
-    height: 440,
-    borderRadius: 18,
   },
 
   text: {
