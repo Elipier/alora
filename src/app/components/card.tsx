@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   text: {
-    color: "#000",
     fontFamily: "System",
     fontSize: 18,
     fontStyle: "normal",
     fontWeight: "600",
     letterSpacing: 0.2,
     textAlign: "center",
+    color: "#000",
   },
 });
