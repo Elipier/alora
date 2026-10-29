@@ -12,20 +12,32 @@ import {
 import { supabase } from "../../../lib/supabase";
 
 type Formulation = {
-  sentence_formulation_id: number;
-  locale_id: number;
-  text: string;
+  content_pack_name: string;
+  source_formulation_id: number;
+  source_text: string;
+  target_formulation_id: number;
+  target_text: string;
 };
 
 type Sentence = {
-  id: number;
-  text: string;
+  cp_name: string;
+  source_id: number;
+  source_text: string;
+  target_id: number;
+  target_text: string;
 };
+
+const p_limit = 20,
+  p_source_locale_id = 2,
+  p_target_locale_id = 3;
 
 const formulationToSentence = (formulation: Formulation): Sentence => {
   return {
-    id: formulation.sentence_formulation_id,
-    text: formulation.text,
+    cp_name: formulation.content_pack_name,
+    source_id: formulation.source_formulation_id,
+    source_text: formulation.source_text,
+    target_id: formulation.target_formulation_id,
+    target_text: formulation.target_text,
   };
 };
 
@@ -38,11 +50,11 @@ export default function GetSentences() {
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase
-      .from("sentence_formulations")
-      .select("sentence_formulation_id, locale_id, text")
-      .eq("locale_id", 3)
-      .limit(50);
+    const { data, error } = await supabase.rpc("get_review_session", {
+      p_limit,
+      p_source_locale_id,
+      p_target_locale_id,
+    });
 
     setLoading(false);
 
