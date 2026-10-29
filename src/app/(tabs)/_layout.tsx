@@ -23,7 +23,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home-sharp" : "home-outline"}
-              color={color}
+              color={typeof color === "string" ? color : "#fff"}
               size={24}
             />
           ),
@@ -38,7 +38,7 @@ export default function TabLayout() {
               name={
                 focused ? "information-circle" : "information-circle-outline"
               }
-              color={color}
+              color={typeof color === "string" ? color : "#fff"}
               size={24}
             />
           ),

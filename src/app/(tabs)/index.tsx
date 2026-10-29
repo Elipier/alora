@@ -64,15 +64,7 @@ export default function GetSentences() {
       <Button title="Récupérer mes phrase" onPress={fetchPhrase} />
       {loading && <ActivityIndicator style={styles.message} />}
       {error && <Text style={styles.error}>Erreur :{error}</Text>}
-
-      {/*{phrases &&
-        phrases.map((phrase) => (
-          <View key={phrase.sentence_formulation_id} style={styles.card}>
-            <Text>{phrase.text}</Text>
-          </View>
-        ))}*/}
-
-      {phrases && <PhraseSwiper sentences={sentenceArray}/>}
+      {phrases && <PhraseSwiper sentences={sentenceArray} />}
     </ScrollView>
   );
 }
