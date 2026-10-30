@@ -3,23 +3,19 @@ import { StyleSheet, Text, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import CardOutline from "./card";
 
-type SpanishPhrase = {
-  id: string;
-  text: string;
+type Sentence = {
+  cp_name: string;
+  source_id: number;
+  source_text: string;
+  target_id: number;
+  target_text: string;
 };
 
-const spanishPhrases: SpanishPhrase[] = [
-  { id: "greeting", text: "¡Buenos días!" },
-  { id: "name", text: "¿Cómo te llamas?" },
-  { id: "introduction", text: "Me llamo Ana." },
-  { id: "coffee", text: "Quisiera un café, por favor." },
-  { id: "station", text: "¿Dónde está la estación?" },
-  { id: "price", text: "¿Cuánto cuesta?" },
-  { id: "thanks", text: "Muchas gracias." },
-  { id: "goodbye", text: "¡Hasta luego!" },
-];
+type SentenceListProps = {
+  sentences: Sentence[];
+};
 
-export default function SpanishPhraseSwiper() {
+export default function PhraseSwiper({ sentences }: SentenceListProps) {
   const [swipedCount, setSwipedCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
@@ -27,23 +23,31 @@ export default function SpanishPhraseSwiper() {
     <View style={styles.container}>
       <Text style={styles.title}>Frases en español</Text>
       <Text style={styles.progress}>
-        {isComplete
-          ? `${spanishPhrases.length} / ${spanishPhrases.length}`
-          : `${swipedCount + 1} / ${spanishPhrases.length} · Desliza para continuar`}
+        {sentences.length === 0
+          ? "0 / 0"
+          : isComplete
+            ? `${sentences.length} / ${sentences.length}`
+            : `${swipedCount + 1} / ${sentences.length} · Desliza para continuar`}
       </Text>
       {isComplete ? (
         <Text style={styles.completeMessage}>
           ¡Muy bien! Has repasado todas las frases.
         </Text>
+      ) : sentences.length === 0 ? (
+        <Text style={styles.completeMessage}>No hay frases para mostrar.</Text>
       ) : (
-        <Swiper<SpanishPhrase>
-          cards={spanishPhrases}
-          renderCard={(phrase) => (
+        <Swiper<Sentence>
+          cards={sentences}
+          renderCard={(sentence) => (
             <View style={styles.cardSlot}>
-              <CardOutline phrase={phrase.text} />
+              <CardOutline
+                target_text={sentence.target_text}
+                cp_name={sentence.cp_name}
+                source_text={sentence.source_text}
+              />
             </View>
           )}
-          keyExtractor={(phrase) => phrase.id}
+          keyExtractor={(sentence) => String(sentence.target_id)}
           onSwiped={(cardIndex) => setSwipedCount(cardIndex + 1)}
           onSwipedAll={() => setIsComplete(true)}
           stackSize={2}
