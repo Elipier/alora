@@ -1,4 +1,4 @@
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../../../services/supabase/supabase";
 
 type Formulation = {
   content_pack_name: string;

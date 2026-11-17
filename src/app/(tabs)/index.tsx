@@ -1,5 +1,5 @@
-import PhraseSwiper from "../components/swiper";
-import fetchSentences from "../../services/fetchSentences";
+import PhraseSwiper from "../../features/learning/components/swiper";
+import fetchSentences from "../../features/learning/services/fetchSentences";
 
 import { useState } from "react";
 import {
