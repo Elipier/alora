@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 type AuthStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -7,7 +7,9 @@ const supabasePublishableKey =
   process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
   process.env.EXPO_PUBLIC_SUPABASE_KEY!;
 
-export function createSupabaseClient(storage?: AuthStorage) {
+export function createSupabaseClient(
+  storage?: AuthStorage,
+): SupabaseClient {
   return createClient(supabaseUrl, supabasePublishableKey, {
     auth: {
       storage,

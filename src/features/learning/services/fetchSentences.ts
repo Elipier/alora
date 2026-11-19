@@ -16,7 +16,7 @@ export default async function fetchSentences(
   setLoading: (loading: boolean) => void,
   setError: (error: string | null) => void,
   setPhrases: (phrases: Formulation[]) => void,
-) {
+): Promise<void> {
   setLoading(true);
   setError(null);
 

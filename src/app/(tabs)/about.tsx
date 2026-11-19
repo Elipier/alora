@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function About() {
+export default function About(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>About screen</Text>

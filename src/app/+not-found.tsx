@@ -1,7 +1,7 @@
 import { Link, Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
-export default function NotFoundScreen() {
+export default function NotFoundScreen(): React.JSX.Element {
   return (
     <>
       <Stack.Screen options={{ title: "Not found" }} />

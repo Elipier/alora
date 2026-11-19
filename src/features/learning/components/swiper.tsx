@@ -15,7 +15,9 @@ type SentenceListProps = {
   sentences: Sentence[];
 };
 
-export default function PhraseSwiper({ sentences }: SentenceListProps) {
+export default function PhraseSwiper({
+  sentences,
+}: SentenceListProps): React.JSX.Element {
   const [swipedCount, setSwipedCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 

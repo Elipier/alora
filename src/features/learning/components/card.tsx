@@ -10,7 +10,7 @@ export default function CardOutline({
   target_text,
   cp_name,
   source_text,
-}: CardOutlineProps) {
+}: CardOutlineProps): React.JSX.Element {
   return (
     <View style={styles.card}>
       <Text style={styles.category}>{cp_name}</Text>

@@ -8,7 +8,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
 } from "react-native";
 
 type Formulation = {
@@ -37,7 +36,7 @@ const formulationToSentence = (formulation: Formulation): Sentence => {
   };
 };
 
-export default function GetSentences() {
+export default function GetSentences(): React.JSX.Element {
   const [phrases, setPhrases] = useState<Formulation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
