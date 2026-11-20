@@ -44,6 +44,36 @@ Ces conventions s'appliquent a tous les fichiers TypeScript et TSX du projet.
 - Eviter les imports avec des chemins de remontes qui depassent clairement la profondeur locale.
 - Utiliser `import type` pour les types uniquement lorsque cela apporte une separation nette.
 
+## Types Supabase
+
+`src/services/supabase/database.types.ts` contient les types issus du schema
+Supabase. Le client Supabase utilise `Database`, et les donnees renvoyees par
+`get_review_session` doivent etre derivees de la definition de cette fonction,
+plutot que redeclarees dans les composants ou services.
+
+Pour regenerer le fichier depuis le projet Supabase, se connecter avec
+`npx supabase login` (le Personal Access Token est conserve localement par le
+CLI). Si le depot n'a pas encore de dossier `supabase/`, initialiser le CLI
+avec `npx supabase init`. Puis, dans Bash, remplacer `PROJECT_REF` par la
+reference du projet Supabase :
+
+```bash
+PROJECT_REF="ta-reference-projet"
+tmp_file="$(mktemp src/services/supabase/database.types.ts.XXXXXX)"
+
+if npx supabase gen types typescript --remote="$PROJECT_REF" --schema public > "$tmp_file"; then
+  mv "$tmp_file" src/services/supabase/database.types.ts
+else
+  rm -f "$tmp_file"
+  echo "Échec de génération; le fichier existant est conservé." >&2
+  exit 1
+fi
+```
+
+Ne pas ajouter de token ou de cle privee au depot. Apres toute modification du
+schema, regenerer les types et lancer `npm run typecheck` pour reperer les
+appels et champs a mettre a jour.
+
 ## Nommage
 
 - Utiliser `PascalCase` pour les composants React, les types, les interfaces et les classes.

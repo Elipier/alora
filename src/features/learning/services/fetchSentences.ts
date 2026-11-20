@@ -1,12 +1,8 @@
 import { supabase } from "../../../services/supabase/supabase";
+import type { Database } from "../../../services/supabase/database.types";
 
-type Formulation = {
-  content_pack_name: string;
-  source_formulation_id: number;
-  source_text: string;
-  target_formulation_id: number;
-  target_text: string;
-};
+export type ReviewSessionFormulation =
+  Database["public"]["Functions"]["get_review_session"]["Returns"][number];
 
 const p_limit = 20,
   p_source_locale_id = 2,
@@ -15,7 +11,7 @@ const p_limit = 20,
 export default async function fetchSentences(
   setLoading: (loading: boolean) => void,
   setError: (error: string | null) => void,
-  setPhrases: (phrases: Formulation[]) => void,
+  setPhrases: (phrases: ReviewSessionFormulation[]) => void,
 ): Promise<void> {
   setLoading(true);
   setError(null);

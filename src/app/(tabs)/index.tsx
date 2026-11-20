@@ -1,5 +1,7 @@
 import PhraseSwiper from "../../features/learning/components/swiper";
-import fetchSentences from "../../features/learning/services/fetchSentences";
+import fetchSentences, {
+  type ReviewSessionFormulation,
+} from "../../features/learning/services/fetchSentences";
 
 import { useState } from "react";
 import {
@@ -10,14 +12,6 @@ import {
   Text,
 } from "react-native";
 
-type Formulation = {
-  content_pack_name: string;
-  source_formulation_id: number;
-  source_text: string;
-  target_formulation_id: number;
-  target_text: string;
-};
-
 type Sentence = {
   cp_name: string;
   source_id: number;
@@ -26,7 +20,9 @@ type Sentence = {
   target_text: string;
 };
 
-const formulationToSentence = (formulation: Formulation): Sentence => {
+const formulationToSentence = (
+  formulation: ReviewSessionFormulation,
+): Sentence => {
   return {
     cp_name: formulation.content_pack_name,
     source_id: formulation.source_formulation_id,
@@ -37,7 +33,7 @@ const formulationToSentence = (formulation: Formulation): Sentence => {
 };
 
 export default function GetSentences(): React.JSX.Element {
-  const [phrases, setPhrases] = useState<Formulation[]>([]);
+  const [phrases, setPhrases] = useState<ReviewSessionFormulation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

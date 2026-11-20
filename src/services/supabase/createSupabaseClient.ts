@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "./database.types";
 
 type AuthStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -9,8 +10,8 @@ const supabasePublishableKey =
 
 export function createSupabaseClient(
   storage?: AuthStorage,
-): SupabaseClient {
-  return createClient(supabaseUrl, supabasePublishableKey, {
+): SupabaseClient<Database> {
+  return createClient<Database>(supabaseUrl, supabasePublishableKey, {
     auth: {
       storage,
       autoRefreshToken: true,

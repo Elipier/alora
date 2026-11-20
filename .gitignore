@@ -43,5 +43,8 @@ example
 /ios
 /android
 
+# Supabase local state
+supabase/.temp/
+
 
 
