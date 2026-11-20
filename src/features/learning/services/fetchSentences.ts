@@ -4,32 +4,32 @@ import type { Database } from "../../../services/supabase/database.types";
 export type ReviewSessionFormulation =
   Database["public"]["Functions"]["get_review_session"]["Returns"][number];
 
-const p_limit = 20,
-  p_source_locale_id = 2,
-  p_target_locale_id = 3;
+export type FetchReviewSessionParams = {
+  limit: number;
+  sourceLocaleId: number;
+  targetLocaleId: number;
+  packId?: number;
+};
+
+export type FetchReviewSessionResult =
+  | {
+      ok: true;
+      data: ReviewSessionFormulation[];
+    }
+  | { ok: false; error: string };
 
 export default async function fetchSentences(
-  setLoading: (loading: boolean) => void,
-  setError: (error: string | null) => void,
-  setPhrases: (phrases: ReviewSessionFormulation[]) => void,
-): Promise<void> {
-  setLoading(true);
-  setError(null);
-
+  params: FetchReviewSessionParams,
+): Promise<FetchReviewSessionResult> {
   const { data, error } = await supabase.rpc("get_review_session", {
-    p_limit,
-    p_source_locale_id,
-    p_target_locale_id,
+    p_limit: params.limit,
+    p_pack_id: params.packId,
+    p_source_locale_id: params.sourceLocaleId,
+    p_target_locale_id: params.targetLocaleId,
   });
 
-  setLoading(false);
-
   if (error) {
-    setError(error.message);
-    return;
+    return { ok: false, error: error.message };
   }
-
-  setPhrases(data ?? []);
-
-  console.log(data);
+  return { ok: true, data: data ?? [] };
 }
