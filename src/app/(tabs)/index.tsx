@@ -1,6 +1,7 @@
 import PhraseSwiper from "../../features/learning/components/swiper";
 import fetchSentences, {
   type ReviewSessionFormulation,
+  type FetchReviewSessionParams,
 } from "../../features/learning/services/fetchSentences";
 
 import { useState } from "react";
@@ -11,6 +12,14 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
+
+// CONSTANTES (TODO - Remplacer par valeurs dynamique users)
+
+const userSentenceParams: FetchReviewSessionParams = {
+  limit: 20,
+  sourceLocaleId: 2,
+  targetLocaleId: 3,
+};
 
 type Sentence = {
   cp_name: string;
@@ -39,12 +48,24 @@ export default function GetSentences(): React.JSX.Element {
 
   const sentenceArray = phrases.map(formulationToSentence);
 
+  async function handleFetchSentence(
+    params: FetchReviewSessionParams,
+  ): Promise<void> {
+    setLoading(true);
+    setError(null);
+    const result = await fetchSentences(params);
+
+    setLoading(false);
+    if (result.ok) setPhrases(result.data);
+    else setError(result.error);
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Alora mes phrases</Text>
       <Button
         title="Récupérer mes phrase"
-        onPress={() => fetchSentences(setLoading, setError, setPhrases)}
+        onPress={() => handleFetchSentence(userSentenceParams)}
       />
       {loading && <ActivityIndicator style={styles.message} />}
       {error && <Text style={styles.error}>Erreur :{error}</Text>}
