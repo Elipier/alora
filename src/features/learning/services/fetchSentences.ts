@@ -1,5 +1,6 @@
 import { supabase } from "../../../services/supabase/supabase";
 import type { Database } from "../../../services/supabase/database.types";
+import type { AppError, AppResult } from "../../../services/result";
 
 export type ReviewSessionFormulation =
   Database["public"]["Functions"]["get_review_session"]["Returns"][number];
@@ -11,12 +12,7 @@ export type FetchReviewSessionParams = {
   packId?: number;
 };
 
-export type FetchReviewSessionResult =
-  | {
-      ok: true;
-      data: ReviewSessionFormulation[];
-    }
-  | { ok: false; error: string };
+export type FetchReviewSessionResult = AppResult<ReviewSessionFormulation[]>;
 
 export default async function fetchSentences(
   params: FetchReviewSessionParams,
@@ -28,8 +24,41 @@ export default async function fetchSentences(
     p_target_locale_id: params.targetLocaleId,
   });
 
+  // TODO - ajouter try/catch
   if (error) {
-    return { ok: false, error: error.message };
+    console.error("Error Supabase fetchSentences:", error);
+
+    let message: AppError["message"] = "Impossible de récupérer les phrases.";
+    let kind: AppError["kind"] = "blocking";
+    let code: AppError["code"] = "unexpected";
+
+    switch (error.code) {
+      case "42501":
+        code = "permission";
+        message = "Vous n'êtes pas autorisé à récupérer ces phrases.";
+        kind = "blocking";
+        break;
+      case "57014":
+        code = "network";
+        message = "La récupération des phrases a expiré.";
+        kind = "recoverable";
+        break;
+      default:
+        // Garde le message générique pour les erreurs non reconnues.
+        break;
+    }
+
+    const appError: AppError = {
+      code,
+      message,
+      kind,
+      log: String(error),
+    };
+
+    return {
+      ok: false,
+      error: appError,
+    };
   }
   return { ok: true, data: data ?? [] };
 }
