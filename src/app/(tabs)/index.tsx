@@ -3,6 +3,7 @@ import fetchSentences, {
   type ReviewSessionFormulation,
   type FetchReviewSessionParams,
 } from "../../features/learning/services/fetchSentences";
+import type { AsyncState } from "../../services/result";
 
 import { useState } from "react";
 import {
@@ -42,22 +43,20 @@ const formulationToSentence = (
 };
 
 export default function GetSentences(): React.JSX.Element {
-  const [phrases, setPhrases] = useState<ReviewSessionFormulation[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState<AsyncState<ReviewSessionFormulation[]>>({
+    status: "idle",
+  });
 
-  const sentenceArray = phrases.map(formulationToSentence);
+  const sentenceArray =
+    state.status === "success" ? state.data.map(formulationToSentence) : [];
 
   async function handleFetchSentence(
     params: FetchReviewSessionParams,
   ): Promise<void> {
-    setLoading(true);
-    setError(null);
+    setState({ status: "loading" });
     const result = await fetchSentences(params);
-
-    setLoading(false);
-    if (result.ok) setPhrases(result.data);
-    else setError(result.error);
+    if (result.ok) setState({ status: "success", data: result.data });
+    else setState({ status: "error", error: result.error });
   }
 
   return (
@@ -65,11 +64,32 @@ export default function GetSentences(): React.JSX.Element {
       <Text style={styles.title}>Alora mes phrases</Text>
       <Button
         title="Récupérer mes phrase"
+        disabled={state.status === "loading"}
         onPress={() => handleFetchSentence(userSentenceParams)}
       />
-      {loading && <ActivityIndicator style={styles.message} />}
-      {error && <Text style={styles.error}>Erreur :{error}</Text>}
-      {phrases && <PhraseSwiper sentences={sentenceArray} />}
+      {state.status === "loading" && (
+        <ActivityIndicator style={styles.message} />
+      )}
+      {state.status === "error" && (
+        <>
+          <Text style={styles.error}>{state.error.message}</Text>
+          {state.error.kind === "recoverable" && (
+            <Button
+              title="Réessayer"
+              onPress={() => handleFetchSentence(userSentenceParams)}
+            />
+          )}
+        </>
+      )}
+      {state.status === "success" && state.data.length !== 0 && (
+        <PhraseSwiper sentences={sentenceArray} />
+      )}
+
+      {state.status === "success" && state.data.length === 0 && (
+        <Text style={styles.message}>
+          Aucune phrases à réviser pour le moment
+        </Text>
+      )}
     </ScrollView>
   );
 }
